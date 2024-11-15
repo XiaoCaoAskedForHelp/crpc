@@ -1,0 +1,2 @@
+jdk=com.amos.crpc.serializer.JDKSerializer
+json=com.amos.crpc.serializer.JsonSerializer

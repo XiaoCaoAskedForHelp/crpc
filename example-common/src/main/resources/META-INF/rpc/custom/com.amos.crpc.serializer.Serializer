@@ -1,0 +1,2 @@
+hessian=com.amos.crpc.serializer.HessianSerializer
+kryo=com.amos.crpc.serializer.KryoSerializer
