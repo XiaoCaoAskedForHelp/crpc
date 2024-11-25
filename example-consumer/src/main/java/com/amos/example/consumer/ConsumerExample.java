@@ -29,6 +29,30 @@ public class ConsumerExample {
         } else {
             System.out.println("user == null");
         }
+
+        user = new User();
+        user.setName("2222222222222");
+        newUser = userService.getUser(user);
+        if (newUser != null) {
+            System.out.println(newUser.getName());
+        } else {
+            System.out.println("user == null");
+        }
+
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        user = new User();
+        user.setName("333333333");
+        newUser = userService.getUser(user);
+        if (newUser != null) {
+            System.out.println(newUser.getName());
+        } else {
+            System.out.println("user == null");
+        }
 //        long number = userService.getNumber();
 //        System.out.println(number);
 

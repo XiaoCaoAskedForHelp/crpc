@@ -28,6 +28,12 @@ public class RpcApplication {
         Registry registry = RegistryFactory.getRegistry(registryConfig.getRegistry());
         registry.init(registryConfig);
         log.info("注册中心初始化完成，当前配置：{}", registryConfig.toString());
+
+        // 创建并注册ShutdownHook， JVM关闭时自动注销服务
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            log.info("JVM关闭，注销服务");
+            registry.destroy();
+        }));
     }
 
     public static void init() {

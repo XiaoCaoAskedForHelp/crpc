@@ -53,7 +53,7 @@ public class ServiceProxy implements InvocationHandler {
         if (CollUtil.isEmpty(serviceMetaInfoList)){
             throw new RuntimeException("未找到服务提供者");
         }
-        // 选择一个服务提供者
+        // todo 选择一个服务提供者
         ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
         try {
             // 序列化

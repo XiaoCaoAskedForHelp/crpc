@@ -67,4 +67,12 @@ public class RegistryTest {
         System.out.println(serviceMetaInfoList);
         System.out.println(serviceMetaInfoList.size());
     }
+
+    @Test
+    public void heartBeat() throws Exception {
+        // init方法中已经调用了心跳检测
+        register();
+        // 阻塞一分钟
+        Thread.sleep(60000);
+    }
 }
