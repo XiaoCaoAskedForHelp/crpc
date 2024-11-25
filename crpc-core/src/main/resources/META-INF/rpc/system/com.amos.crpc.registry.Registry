@@ -1,1 +1,2 @@
 etcd=com.amos.crpc.registry.EtcdRegistry
+zookeeper=com.amos.crpc.registry.ZooKeeperRegistry

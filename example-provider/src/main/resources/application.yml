@@ -4,3 +4,6 @@ rpc:
   serverPort: 8090
   mock: false
   serializer: kryo
+  registryConfig:
+    registry: zookeeper
+    address: localhost:2181
