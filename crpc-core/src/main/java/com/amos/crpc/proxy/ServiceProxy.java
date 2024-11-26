@@ -1,8 +1,6 @@
 package com.amos.crpc.proxy;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import com.amos.crpc.RpcApplication;
 import com.amos.crpc.config.RpcConfig;
 import com.amos.crpc.constant.RpcConstant;
@@ -17,6 +15,8 @@ import com.amos.crpc.serializer.SerializerFactory;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
+
+import static com.amos.crpc.server.tcp.VertxTcpClient.doRequest;
 
 /**
  * 动态代理
@@ -50,26 +50,33 @@ public class ServiceProxy implements InvocationHandler {
         serviceMetaInfo.setServiceName(rpcRequest.getServiceName());
         serviceMetaInfo.setServiceVersion(RpcConstant.DEFAULT_SERVICE_VERSION);
         List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceMetaInfo.getServiceKey());
-        if (CollUtil.isEmpty(serviceMetaInfoList)){
+        if (CollUtil.isEmpty(serviceMetaInfoList)) {
             throw new RuntimeException("未找到服务提供者");
         }
         // todo 选择一个服务提供者
         ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+        // http请求
+//        try {
+//            // 序列化
+//            byte[] bodyBytes = serializer.serialize(rpcRequest);
+//            // 发动请求
+//            try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())
+//                    .body(bodyBytes)
+//                    .execute()) {
+//                byte[] result = httpResponse.bodyBytes();
+//                // 反序列化
+//                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
+//                return rpcResponse.getData();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        // 发动tcp请求
         try {
-            // 序列化
-            byte[] bodyBytes = serializer.serialize(rpcRequest);
-            // 发动请求
-            try (HttpResponse httpResponse = HttpRequest.post(selectedServiceMetaInfo.getServiceAddress())
-                    .body(bodyBytes)
-                    .execute()) {
-                byte[] result = httpResponse.bodyBytes();
-                // 反序列化
-                RpcResponse rpcResponse = serializer.deserialize(result, RpcResponse.class);
-                return rpcResponse.getData();
-            }
+            RpcResponse rpcResponse = doRequest(rpcRequest, selectedServiceMetaInfo);
+            return rpcResponse.getData();
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("请求失败");
         }
-        return null;
     }
 }

@@ -2,7 +2,7 @@ package com.amos.example.provider;
 
 import com.amos.crpc.registry.LocalRegistry;
 import com.amos.crpc.server.HttpServer;
-import com.amos.crpc.server.VertxHttpServer;
+import com.amos.crpc.server.http.VertxHttpServer;
 import com.amos.example.common.service.UserService;
 
 /**

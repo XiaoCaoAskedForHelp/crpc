@@ -1,5 +1,6 @@
-package com.amos.crpc.server;
+package com.amos.crpc.server.http;
 
+import com.amos.crpc.server.HttpServer;
 import io.vertx.core.Vertx;
 
 public class VertxHttpServer implements HttpServer {

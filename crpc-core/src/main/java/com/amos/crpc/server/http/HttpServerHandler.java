@@ -1,4 +1,4 @@
-package com.amos.crpc.server;
+package com.amos.crpc.server.http;
 
 import com.amos.crpc.RpcApplication;
 import com.amos.crpc.model.RpcRequest;

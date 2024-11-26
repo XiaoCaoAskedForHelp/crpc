@@ -8,7 +8,8 @@ import com.amos.crpc.registry.LocalRegistry;
 import com.amos.crpc.registry.Registry;
 import com.amos.crpc.registry.RegistryFactory;
 import com.amos.crpc.server.HttpServer;
-import com.amos.crpc.server.VertxHttpServer;
+import com.amos.crpc.server.http.VertxHttpServer;
+import com.amos.crpc.server.tcp.VertxTcpServer;
 import com.amos.example.common.service.UserService;
 
 /**
@@ -38,7 +39,11 @@ public class ProviderExample {
         }
 
         // 启动web服务
-        HttpServer httpServer = new VertxHttpServer();
+//        HttpServer httpServer = new VertxHttpServer();
+//        httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
+
+        // 启动TCP服务
+        HttpServer httpServer = new VertxTcpServer();
         httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
     }
 }
