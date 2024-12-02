@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/example-common/pom.xml" />
         <option value="$PROJECT_DIR$/crpc-easy/pom.xml" />
         <option value="$PROJECT_DIR$/crpc-core/pom.xml" />
+        <option value="$PROJECT_DIR$/example-provider1/pom.xml" />
       </list>
     </option>
   </component>

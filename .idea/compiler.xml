@@ -10,6 +10,7 @@
         <module name="crpc-easy" />
         <module name="crpc-core" />
         <module name="example-provider" />
+        <module name="example-provider1" />
         <module name="example-common" />
         <module name="example-consumer" />
       </profile>

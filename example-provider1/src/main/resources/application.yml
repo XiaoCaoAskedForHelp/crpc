@@ -1,0 +1,9 @@
+rpc:
+  name: crpc
+  version: 1.0.2
+  serverPort: 8091
+  mock: false
+  serializer: kryo
+  registryConfig:
+    registry: zookeeper
+    address: localhost:2181

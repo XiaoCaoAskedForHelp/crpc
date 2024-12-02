@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import com.amos.crpc.RpcApplication;
 import com.amos.crpc.config.RpcConfig;
 import com.amos.crpc.constant.RpcConstant;
+import com.amos.crpc.loadbalancer.LoadBalancer;
+import com.amos.crpc.loadbalancer.LoadBalancerFactory;
 import com.amos.crpc.model.RpcRequest;
 import com.amos.crpc.model.RpcResponse;
 import com.amos.crpc.model.ServiceMetaInfo;
@@ -11,10 +13,13 @@ import com.amos.crpc.registry.Registry;
 import com.amos.crpc.registry.RegistryFactory;
 import com.amos.crpc.serializer.Serializer;
 import com.amos.crpc.serializer.SerializerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.amos.crpc.server.tcp.VertxTcpClient.doRequest;
 
@@ -22,6 +27,7 @@ import static com.amos.crpc.server.tcp.VertxTcpClient.doRequest;
  * 动态代理
  * 根据要生成的对象的类型，自动生成一个代码里对象
  */
+@Slf4j
 public class ServiceProxy implements InvocationHandler {
 
     /**
@@ -53,8 +59,14 @@ public class ServiceProxy implements InvocationHandler {
         if (CollUtil.isEmpty(serviceMetaInfoList)) {
             throw new RuntimeException("未找到服务提供者");
         }
-        // todo 选择一个服务提供者
-        ServiceMetaInfo selectedServiceMetaInfo = serviceMetaInfoList.get(0);
+        // 负载均衡
+        LoadBalancer loadBalancer = LoadBalancerFactory.getLoadBalancer(rpcConfig.getLoadBalancer());
+        // 将调用方法名（请求路径） 作为负载均衡的参数
+        Map<String, Object> requestParams = new HashMap<>();
+        requestParams.put("methodName", rpcRequest.getMethodName());
+        ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
+        log.info("负载均衡器: {}, 选择的服务提供者: {}", loadBalancer.getClass().getSimpleName(), selectedServiceMetaInfo);
+
         // http请求
 //        try {
 //            // 序列化

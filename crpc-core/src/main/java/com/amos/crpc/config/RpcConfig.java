@@ -1,6 +1,8 @@
 package com.amos.crpc.config;
 
 
+import com.amos.crpc.loadbalancer.LoadBalancerKeys;
+import com.amos.crpc.serializer.SerializerKeys;
 import lombok.Data;
 
 /**
@@ -36,7 +38,12 @@ public class RpcConfig {
     /**
      * 序列化方式
      */
-    private String serializer = "jdk";
+    private String serializer = SerializerKeys.JDK;
+
+    /**
+     * 负载均衡策略
+     */
+    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
 
     /**
      * 注册中心配置
