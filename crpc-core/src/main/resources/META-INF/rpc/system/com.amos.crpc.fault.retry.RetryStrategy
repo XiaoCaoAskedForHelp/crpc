@@ -1,0 +1,2 @@
+no=com.amos.crpc.fault.retry.NoRetryStrategy
+fixedInterval=com.amos.crpc.fault.retry.FixedIntervalRetryStrategy

@@ -4,6 +4,8 @@ import cn.hutool.core.collection.CollUtil;
 import com.amos.crpc.RpcApplication;
 import com.amos.crpc.config.RpcConfig;
 import com.amos.crpc.constant.RpcConstant;
+import com.amos.crpc.fault.retry.RetryStrategy;
+import com.amos.crpc.fault.retry.RetryStrategyFactory;
 import com.amos.crpc.loadbalancer.LoadBalancer;
 import com.amos.crpc.loadbalancer.LoadBalancerFactory;
 import com.amos.crpc.model.RpcRequest;
@@ -13,6 +15,7 @@ import com.amos.crpc.registry.Registry;
 import com.amos.crpc.registry.RegistryFactory;
 import com.amos.crpc.serializer.Serializer;
 import com.amos.crpc.serializer.SerializerFactory;
+import com.amos.crpc.server.tcp.VertxTcpClient;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -20,8 +23,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.amos.crpc.server.tcp.VertxTcpClient.doRequest;
 
 /**
  * 动态代理
@@ -85,7 +86,11 @@ public class ServiceProxy implements InvocationHandler {
 //        }
         // 发动tcp请求
         try {
-            RpcResponse rpcResponse = doRequest(rpcRequest, selectedServiceMetaInfo);
+            RetryStrategy retryStrategy = RetryStrategyFactory.getRetryStrategy(rpcConfig.getRetryStrategy());
+            RpcResponse rpcResponse = retryStrategy.doRetry(() -> {
+//                throw new RuntimeException("请求失败");  # 测试重试策略
+                return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            });
             return rpcResponse.getData();
         } catch (Exception e) {
             throw new RuntimeException("请求失败");

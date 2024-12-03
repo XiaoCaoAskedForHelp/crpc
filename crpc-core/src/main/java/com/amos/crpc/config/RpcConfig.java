@@ -1,6 +1,7 @@
 package com.amos.crpc.config;
 
 
+import com.amos.crpc.fault.retry.RetryStrategyKeys;
 import com.amos.crpc.loadbalancer.LoadBalancerKeys;
 import com.amos.crpc.serializer.SerializerKeys;
 import lombok.Data;
@@ -44,6 +45,11 @@ public class RpcConfig {
      * 负载均衡策略
      */
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.NO;
 
     /**
      * 注册中心配置
