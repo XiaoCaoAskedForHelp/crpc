@@ -1,0 +1,4 @@
+failBack=com.amos.crpc.fault.tolerant.FailBackTolerantStrategy
+failOver=com.amos.crpc.fault.tolerant.FailOverTolerantStrategy
+failFast=com.amos.crpc.fault.tolerant.FailFastTolerantStrategy
+failSafe=com.amos.crpc.fault.tolerant.FailSafeTolerantStrategy

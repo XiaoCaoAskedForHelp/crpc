@@ -2,6 +2,7 @@ package com.amos.crpc.config;
 
 
 import com.amos.crpc.fault.retry.RetryStrategyKeys;
+import com.amos.crpc.fault.tolerant.TolerantStrategyKeys;
 import com.amos.crpc.loadbalancer.LoadBalancerKeys;
 import com.amos.crpc.serializer.SerializerKeys;
 import lombok.Data;
@@ -50,6 +51,12 @@ public class RpcConfig {
      * 重试策略
      */
     private String retryStrategy = RetryStrategyKeys.NO;
+
+
+    /**
+     * 容错策略
+     */
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
 
     /**
      * 注册中心配置

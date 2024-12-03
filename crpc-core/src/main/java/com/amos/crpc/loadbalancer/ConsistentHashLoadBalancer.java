@@ -40,6 +40,7 @@ public class ConsistentHashLoadBalancer implements LoadBalancer {
         if (entry == null) {
             entry = virtualNodes.firstEntry();
         }
+        virtualNodes.clear();
         return entry.getValue();
     }
 

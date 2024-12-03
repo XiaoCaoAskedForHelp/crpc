@@ -6,6 +6,8 @@ import com.amos.crpc.config.RpcConfig;
 import com.amos.crpc.constant.RpcConstant;
 import com.amos.crpc.fault.retry.RetryStrategy;
 import com.amos.crpc.fault.retry.RetryStrategyFactory;
+import com.amos.crpc.fault.tolerant.TolerantStrategy;
+import com.amos.crpc.fault.tolerant.TolerantStrategyFactory;
 import com.amos.crpc.loadbalancer.LoadBalancer;
 import com.amos.crpc.loadbalancer.LoadBalancerFactory;
 import com.amos.crpc.model.RpcRequest;
@@ -60,6 +62,7 @@ public class ServiceProxy implements InvocationHandler {
         if (CollUtil.isEmpty(serviceMetaInfoList)) {
             throw new RuntimeException("未找到服务提供者");
         }
+        log.info("服务提供者列表: {}", serviceMetaInfoList);
         // 负载均衡
         LoadBalancer loadBalancer = LoadBalancerFactory.getLoadBalancer(rpcConfig.getLoadBalancer());
         // 将调用方法名（请求路径） 作为负载均衡的参数
@@ -85,15 +88,19 @@ public class ServiceProxy implements InvocationHandler {
 //            e.printStackTrace();
 //        }
         // 发动tcp请求
+        RpcResponse rpcResponse = null;
         try {
             RetryStrategy retryStrategy = RetryStrategyFactory.getRetryStrategy(rpcConfig.getRetryStrategy());
-            RpcResponse rpcResponse = retryStrategy.doRetry(() -> {
-//                throw new RuntimeException("请求失败");  # 测试重试策略
+            rpcResponse = retryStrategy.doRetry(() -> {
+//                throw new RuntimeException("请求失败");  // 测试重试策略
                 return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
             });
-            return rpcResponse.getData();
         } catch (Exception e) {
-            throw new RuntimeException("请求失败");
+//            throw new RuntimeException("请求失败");
+            // 容错机制
+            TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getTolerantStrategy(rpcConfig.getTolerantStrategy());
+            rpcResponse = tolerantStrategy.doTolerant(null, e);
         }
+        return rpcResponse.getData();
     }
 }
