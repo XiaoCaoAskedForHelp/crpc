@@ -10,7 +10,7 @@ public class ConsumerBootstrap {
      * 初始化
      */
     public static void init() {
-        // 初始化RPC框架
+        // 初始化RPC框架(配置和注册中心)
         RpcApplication.init();
     }
 }
